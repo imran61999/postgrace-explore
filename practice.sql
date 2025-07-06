@@ -1,3 +1,4 @@
+-- Active: 1750240490853@@127.0.0.1@5432@ph@public
 -- Creating the employees table
 CREATE TABLE employees (
     employee_id SERIAL PRIMARY KEY,
@@ -13,8 +14,9 @@ CREATE TABLE departments (
     department_name VARCHAR(50)
 );
 
+drop Table departments;
 
--- Inserting sample data into the departments table
+-- -- Inserting sample data into the departments table
 INSERT INTO departments (department_name) VALUES 
     ('HR'), 
     ('Marketing'), 
@@ -27,10 +29,10 @@ INSERT INTO departments (department_name) VALUES
     ('Research'), 
     ('Quality Assurance');
 
-SELECT * FROM departments;
+-- SELECT * FROM departments;
 
-SELECT current_database();
-SELECT has_table_privilege('practice.departments', 'SELECT');
+-- SELECT current_database();
+-- SELECT has_table_privilege('practice.departments', 'SELECT');
 
 
 INSERT INTO employees (employee_name, department_id, salary, hire_date) VALUES 
@@ -65,4 +67,26 @@ INSERT INTO employees (employee_name, department_id, salary, hire_date) VALUES
     ('Nathan Rivera', 9, 74000.50, '2020-07-15'),
     ('Mia Roberts', 10, 70000.25, '2021-11-20');
 
-SELECT * FROM employees;
+SELECT * FROM employees
+JOIN departments ON employees.department_id =departments.department_id;
+SELECT * FROM employees
+JOIN departments USING(department_id);
+
+
+-- show department name with average salary
+SELECT department_name, avg(salary) FROM employees
+JOIN departments USING(department_id)
+GROUP BY department_name;
+
+-- count employees in each department
+SELECT department_name, count(*) FROM employees
+JOIN departments USING(department_id)
+GROUP BY department_name;
+
+-- find the department name with the highest average salary
+SELECT department_name, round(avg(salary)) as avg_salary FROM employees
+JOIN departments USING(department_id)
+GROUP BY department_name
+ORDER BY avg_salary DESC
+LIMIT 1;
+
